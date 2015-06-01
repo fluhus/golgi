@@ -1,4 +1,5 @@
-package main
+// Deals with Burrows-Wheeler transformations and indexing.
+package bwt
 
 import (
 	"bytes"
@@ -6,35 +7,39 @@ import (
 	"sort"
 )
 
-func main() {
-	s := "how much wood would a wood chuck chuck"
-	fmt.Println("'" + string(transform([]byte(s))) + "'")
-	fmt.Println(newRankIndex([]byte("AATACGCTGA"), 3))
-	fmt.Println("AATACGCTGA")
-}
-
-func transform(str []byte) []byte {
+// Returns a BW-transform of the given sequence, without changing it. Adds a $
+// sign as a terminating character.
+func Transform(str []byte) []byte {
 	return newBwSorter(str).sort().transform()
 }
 
+// A sorting interface for a sequence's suffixes.
 type bwSorter struct {
-	str  []byte
-	perm []int
+	str  []byte  // Sequence to transform.
+	perm []int   // Suffix permutation to sort.
 }
 
+// Creates a new sorter for the given sequence.
 func newBwSorter(str []byte) *bwSorter {
-	perm := make([]int, len(str))
+	// Copy str and add a terminator character.
+	strCopy := make([]byte, len(str) + 1)
+	copy(strCopy, str)
+	strCopy[len(strCopy) - 1] = '$'
+	
+	perm := make([]int, len(strCopy))
 	for i := range perm {
 		perm[i] = i
 	}
-	return &bwSorter{str, perm}
+	return &bwSorter{strCopy, perm}
 }
 
+// Sorts the sorter's permutation.
 func (b *bwSorter) sort() *bwSorter {
 	sort.Sort(b)
 	return b
 }
 
+// Sorting functions.
 func (b *bwSorter) Len() int {
 	return len(b.perm)
 }
@@ -45,6 +50,8 @@ func (b *bwSorter) Swap(i, j int) {
 	b.perm[i], b.perm[j] = b.perm[j], b.perm[i]
 }
 
+// Applies BW-transform of the sorter's sequence. Should be called after
+// sorting. Does not change the input sequence.
 func (b *bwSorter) transform() []byte {
 	arr := make([]byte, len(b.str))
 	for i := range arr {
@@ -53,6 +60,7 @@ func (b *bwSorter) transform() []byte {
 	return arr
 }
 
+// Indexes the ranks of characters in a BW-transformed sequence.
 type rankIndex struct {
 	chars map[byte]int // From char to index in rank.
 	ranks [][]int      // Ranks[i] is ranks at i*jump including.

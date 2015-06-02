@@ -115,13 +115,18 @@ func newRankIndex(str []byte, jump int) *rankIndex {
 	return result
 }
 
-func (r *rankIndex) rankOf(char byte, at int, str []byte) int {
+func (r *rankIndex) rankOf(char byte, at int) int {
+	// Check if character exists.
+	if _, ok := r.chars[char]; !ok {
+		return 0
+	}
+
 	// Ranks at the closest rank array.
 	result := r.ranks[at / r.jump][r.chars[char]]
 
 	// Count up to 'at'.
 	for i := at / r.jump*r.jump + 1; i <= at; i++ {
-		if str[i] == char {
+		if r.str[i] == char {
 			result++
 		}
 	}

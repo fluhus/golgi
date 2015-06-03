@@ -66,6 +66,7 @@ func (b *bwSorter) transform() []byte {
 // ----- RANK INDEX ------------------------------------------------------------
 
 // Indexes the ranks of characters in a BW-transformed sequence.
+// Ranks are 1-base, since they indicate counts of character appearances.
 type rankIndex struct {
 	str   []byte       // Input sequence.
 	chars map[byte]int // From char to index in rank.
@@ -150,9 +151,15 @@ func newFcIndex(str []byte) fcIndex {
 	}
 	
 	result := make(map[byte]int)
-	for i := byte(0); i < ~byte(0); i++ {
+	for i := byte(0); i < ^byte(0); i++ {
 		result[i+1] = result[i] + counts[i]
 	}
 	
 	return result
+}
+
+// Returns the index of the given character in the first (sorted)
+// column of the BW-matrix.
+func (f fcIndex) indexOf(char byte, rank int) int {
+	return f[char] + rank - 1  // -1 because rank is 1-based.
 }

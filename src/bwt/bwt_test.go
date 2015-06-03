@@ -51,6 +51,23 @@ func TestRankIndex_complex(t *testing.T) {
 	}
 }
 
+func TestFcIndex(t *testing.T) {
+	assert := assert.New(t)
+	
+	idx := newFcIndex([]byte("abracadabra"))
+	assert.Equal(0, idx.indexOf('a', 1))
+	assert.Equal(1, idx.indexOf('a', 2))
+	assert.Equal(2, idx.indexOf('a', 3))
+	assert.Equal(3, idx.indexOf('a', 4))
+	assert.Equal(4, idx.indexOf('a', 5))
+	assert.Equal(5, idx.indexOf('b', 1))
+	assert.Equal(6, idx.indexOf('b', 2))
+	assert.Equal(7, idx.indexOf('c', 1))
+	assert.Equal(8, idx.indexOf('d', 1))
+	assert.Equal(9, idx.indexOf('r', 1))
+	assert.Equal(10, idx.indexOf('r', 2))
+}
+
 
 
 

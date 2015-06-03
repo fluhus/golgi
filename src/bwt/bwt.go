@@ -115,6 +115,8 @@ func newRankIndex(str []byte, jump int) *rankIndex {
 	return result
 }
 
+// Returns the rank of a character at a given position, including
+// that position.
 func (r *rankIndex) rankOf(char byte, at int) int {
 	// Check if character exists.
 	if _, ok := r.chars[char]; !ok {
@@ -134,3 +136,23 @@ func (r *rankIndex) rankOf(char byte, at int) int {
 	return result
 }
 
+
+// ----- FIRST COLUMN INDEX ----------------------------------------------------
+
+// An index on the first column of the BW-matrix.
+type fcIndex map[byte]int
+
+// Creates an index on the given BW-transformed sequence.
+func newFcIndex(str []byte) fcIndex {
+	counts := make(map[byte]int)
+	for _, b := range str {
+		counts[b]++
+	}
+	
+	result := make(map[byte]int)
+	for i := byte(0); i < ~byte(0); i++ {
+		result[i+1] = result[i] + counts[i]
+	}
+	
+	return result
+}

@@ -163,3 +163,17 @@ func newFcIndex(str []byte) fcIndex {
 func (f fcIndex) indexOf(char byte, rank int) int {
 	return f[char] + rank - 1  // -1 because rank is 1-based.
 }
+
+
+// ----- UNITED INDEX ----------------------------------------------------------
+
+// Indexes a BT-transformed sequence.
+type index struct {
+	*rankIndex
+	fcIndex
+}
+
+// Constructs an index for the given BW-transformed sequence.
+func newIndex(str []byte) *index {
+	return &index{ newRankIndex(str, 100), newFcIndex(str) }
+}

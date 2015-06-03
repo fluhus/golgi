@@ -169,11 +169,20 @@ func (f fcIndex) indexOf(char byte, rank int) int {
 
 // Indexes a BT-transformed sequence.
 type index struct {
+	str []byte
 	*rankIndex
 	fcIndex
 }
 
 // Constructs an index for the given BW-transformed sequence.
 func newIndex(str []byte) *index {
-	return &index{ newRankIndex(str, 100), newFcIndex(str) }
+	return &index{ str, newRankIndex(str, 100), newFcIndex(str) }
+}
+
+
+// ----- SEARCH ----------------------------------------------------------------
+
+// TODO
+func (idx *index) search(str []byte) int {
+	return 0
 }

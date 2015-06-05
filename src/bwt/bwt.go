@@ -190,7 +190,7 @@ func (idx *index) search(str []byte) []int {
 
 	char := str[len(str) - 1]
 	fromRank := 1
-	toRank := idx.rankOf(char, len(str) - 1)
+	toRank := idx.rankOf(char, len(idx.str) - 1)
 
 	// First character does not exist.
 	if toRank == 0 { return nil }

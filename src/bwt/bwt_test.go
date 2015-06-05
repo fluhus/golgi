@@ -73,8 +73,9 @@ func TestSearch(t *testing.T) {
 
 	tr := Transform([]byte("abracadabra"))
 	idx := newIndex(tr)
-	t.Log("tr =", string(tr))
 	assert.Equal([]int{1}, idx.search([]byte("c")))
+	assert.Equal([]int{2, 3}, idx.search([]byte("abr")))
+	assert.Equal([]int(nil), idx.search([]byte("abru")))
 }
 
 

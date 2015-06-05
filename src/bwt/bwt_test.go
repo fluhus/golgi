@@ -68,7 +68,14 @@ func TestFcIndex(t *testing.T) {
 	assert.Equal(10, idx.indexOf('r', 2))
 }
 
+func TestSearch(t *testing.T) {
+	assert := assert.New(t)
 
+	tr := Transform([]byte("abracadabra"))
+	idx := newIndex(tr)
+	t.Log("tr =", string(tr))
+	assert.Equal([]int{1}, idx.search([]byte("c")))
+}
 
 
 

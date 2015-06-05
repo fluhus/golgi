@@ -154,14 +154,14 @@ func newFcIndex(str []byte) fcIndex {
 	for i := byte(0); i < ^byte(0); i++ {
 		result[i+1] = result[i] + counts[i]
 	}
-	
+
 	return result
 }
 
 // Returns the index of the given character in the first (sorted)
-// column of the BW-matrix.
+// column of the BW-matrix. Assumes the character does exist.
 func (f fcIndex) indexOf(char byte, rank int) int {
-	return f[char] + rank - 1  // -1 because rank is 1-based.
+	return f[char] + rank - 1   // -1 because rank is 1-based.
 }
 
 
@@ -183,6 +183,34 @@ func newIndex(str []byte) *index {
 // ----- SEARCH ----------------------------------------------------------------
 
 // TODO
-func (idx *index) search(str []byte) int {
-	return 0
+func (idx *index) search(str []byte) []int {
+	if len(str) == 0 {
+		panic("Empty string is not allowed.")
+	}
+
+	char := str[len(str) - 1]
+	fromRank := 1
+	toRank := idx.rankOf(char, len(str) - 1)
+
+	// First character does not exist.
+	if toRank == 0 { return nil }
+
+	for i := len(str) - 2; i >= 0; i-- {
+		from := idx.indexOf(char, fromRank)
+		to := idx.indexOf(char, toRank)
+		char = str[i]
+		fromRank = idx.rankOf(char, from)
+		toRank = idx.rankOf(char, to)
+
+		// Not found.
+		if toRank == 0 { return nil }
+		if fromRank == 0 { fromRank = 1 }
+	}
+
+	var result []int
+	for i := fromRank; i <= toRank; i++ {
+		result = append(result, i)
+	}
+
+	return result
 }
